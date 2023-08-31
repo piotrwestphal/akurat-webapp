@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+concurrency: prod-deploy
+
 jobs:
   build:
     name: Deploy Prod Job
@@ -30,6 +32,7 @@ jobs:
 
       - name: Webapp - Build
         env:
+          VITE_API_URL: api.${{ secrets.DOMAIN_NAME }}
           NODE_ENV: production
         run: |
           npm run build
