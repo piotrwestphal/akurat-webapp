@@ -54,5 +54,6 @@ jobs:
           npm install -g aws-cdk
 
       - name: AWS CDK deploy
+        working-directory: ./cdk
         run: |
           cdk deploy ${{ env.CDK_STACK_NAME }} --require-approval never --ci
