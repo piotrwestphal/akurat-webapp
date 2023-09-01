@@ -40,7 +40,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     const logout = async () => {
-        await httpGet<{ message: string }>('/v1/auth/logout')
+        await httpGet<{ message: string }>('/api/v1/auth/logout')
         setAuthState(initialAuthState)
         navigate(welcomeRoute, {state: {noRefresh: true}})
     }
@@ -49,7 +49,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                                                                              onSuccess,
                                                                              onError,
                                                                          }) => {
-        const {data} = await httpGet<AuthRes>('/v1/auth/refresh')
+        const {data} = await httpGet<AuthRes>('/api/v1/auth/refresh')
         if (data) {
             setAuthState({token: data.token})
             onSuccess?.()
@@ -61,7 +61,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
     const refreshOnCall = async (onSuccess: () => Promise<AxiosError>,
                                  onError: () => Promise<AxiosError>): Promise<AxiosError> => {
-        const {data} = await httpGet<AuthRes>('/v1/auth/refresh')
+        const {data} = await httpGet<AuthRes>('/api/v1/auth/refresh')
         if (data) {
             setAuthState({token: data.token})
             return onSuccess()

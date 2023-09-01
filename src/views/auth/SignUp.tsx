@@ -60,7 +60,7 @@ export const SignUp = () => {
     const onSubmit = (values: SignupFormValues,
                       {setSubmitting}: FormikHelpers<SignupFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<SignUpRes>('/v1/auth/signup', toReq(values))
+        httpPost<SignUpRes>('/api/v1/auth/signup', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})

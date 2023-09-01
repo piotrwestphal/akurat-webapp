@@ -61,7 +61,7 @@ export const Login = () => {
     const onSubmit = (values: LoginFormValues,
                       {setSubmitting}: FormikHelpers<LoginFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<AuthRes>('/v1/auth/login', toReq(values))
+        httpPost<AuthRes>('/api/v1/auth/login', toReq(values))
             .then(({errorDetails, errorStatus, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails, errorStatus})

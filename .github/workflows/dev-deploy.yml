@@ -30,7 +30,6 @@ jobs:
 
       - name: Webapp - Build
         env:
-          VITE_API_URL: https://api.dev.${{ secrets.DOMAIN_NAME }}
           NODE_ENV: production
         run: |
           npm run build

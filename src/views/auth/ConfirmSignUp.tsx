@@ -56,7 +56,7 @@ export const ConfirmSignUp = () => {
     const onSubmit = (values: ConfirmSignupFormValues,
                       {setSubmitting}: FormikHelpers<ConfirmSignupFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<{ message: string }>('/v1/auth/confirm-signup', toReq(values))
+        httpPost<{ message: string }>('/api/v1/auth/confirm-signup', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})

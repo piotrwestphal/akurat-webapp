@@ -66,7 +66,7 @@ export const ConfirmReset = () => {
     const onSubmit = (values: ConfirmResetFormValues,
                       {setSubmitting}: FormikHelpers<ConfirmResetFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<ConfirmResetRes>('/v1/auth/confirm-forgot', toReq(values))
+        httpPost<ConfirmResetRes>('/api/v1/auth/confirm-forgot', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})

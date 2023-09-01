@@ -46,7 +46,7 @@ export const Reset = () => {
     const onSubmit = (values: ResetFormValues,
                       {setSubmitting}: FormikHelpers<ResetFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<ForgotRes>('/v1/auth/forgot', toReq(values))
+        httpPost<ForgotRes>('/api/v1/auth/forgot', toReq(values))
             .then(({errorDetails, data}) => {
                 console.log({errorDetails, data})
                 setSubmitting(false)
