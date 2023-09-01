@@ -1,9 +1,12 @@
 name: Deploy Prod
 
+
 on:
   push:
     branches:
       - main
+
+concurrency: prod-deploy
 
 jobs:
   build:
