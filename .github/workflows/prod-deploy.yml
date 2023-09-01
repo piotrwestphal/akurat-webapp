@@ -1,6 +1,5 @@
 name: Deploy Prod
 
-
 on:
   push:
     branches:
