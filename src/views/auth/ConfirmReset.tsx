@@ -1,16 +1,16 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useFormik } from 'formik'
+import {Stack, TextField, Typography} from '@mui/material'
+import {FormikHelpers, useFormik} from 'formik'
+import {useState} from 'react'
+import {useLocation, useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
-import { Schema } from 'yup'
-import { FormikHelpers } from 'formik'
-import { Stack, TextField, Typography } from '@mui/material'
-import { httpPost, HttpResult } from '../../core/http.client'
-import { ErrorStatus } from '../common/Status'
-import { loginRoute, resetRoute } from '../../core/routes'
-import { EmailField } from './EmailField'
-import { ContinueButton } from './ContinueButton'
-import { PasswordField } from './PasswordField'
+import {Schema} from 'yup'
+import {httpPost, HttpResult} from '../../core/http.client'
+import {loginRoute, resetRoute} from '../../core/routes'
+import {MyLink} from '../common/MyLink.tsx'
+import {ErrorStatus} from '../common/Status'
+import {ContinueButton} from './ContinueButton'
+import {EmailField} from './EmailField'
+import {PasswordField} from './PasswordField'
 
 type ConfirmResetDto = Readonly<{
     email: string
@@ -27,7 +27,7 @@ export type ConfirmResetFormValues = Readonly<{
 const toReq = ({
                    email,
                    password,
-                   code
+                   code,
                }: ConfirmResetFormValues): ConfirmResetDto => ({
     email,
     password,
@@ -50,7 +50,7 @@ const validationSchema = yup.object<ConfirmResetFormValues>({
         .string()
         .min(6)
         .max(6)
-        .required('Valid confirmation code is required')
+        .required('Valid confirmation code is required'),
 } satisfies Record<keyof ConfirmResetFormValues, Schema>)
 
 const itemWidth = 300
@@ -72,7 +72,7 @@ export const ConfirmReset = () => {
                 setFetchResult({errorDetails})
                 if (data) {
                     navigate(loginRoute, {
-                        state: {noRefresh: true, email: values.email, confirmationMessage: data.message}
+                        state: {noRefresh: true, email: values.email, confirmationMessage: data.message},
                     })
                 }
             })
@@ -81,7 +81,7 @@ export const ConfirmReset = () => {
     const formik = useFormik<ConfirmResetFormValues>({
         initialValues: {email, password: '', code: ''},
         validationSchema,
-        onSubmit
+        onSubmit,
     })
 
     return (
@@ -90,7 +90,7 @@ export const ConfirmReset = () => {
                   height: '100vh',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
               }}>
             <Stack spacing={2}
                    alignItems="center">
@@ -112,10 +112,9 @@ export const ConfirmReset = () => {
                            error={formik.touched.code && Boolean(formik.errors.code)}
                            helperText={(formik.touched.code && formik.errors.code) || ''}/>
                 <ContinueButton width={itemWidth} formik={formik}/>
-                <Typography variant="body2">Didn't receive the code? <Link style={{textDecoration: 'none'}}
-                                                                           to={resetRoute}
-                                                                           state={{noRefresh: true}}>Please try to reset
-                    again</Link>
+                <Typography variant="body2">Didn't receive the code? <MyLink to={resetRoute}
+                                                                             state={{noRefresh: true}}>Please try to
+                    reset again</MyLink>
                 </Typography>
                 {fetchResult?.errorDetails && <ErrorStatus label={fetchResult.errorDetails}/>}
             </Stack>

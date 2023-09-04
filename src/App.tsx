@@ -3,13 +3,14 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import {useMemo} from 'react'
-import './App.css'
 import {Navigate, Route, Routes} from 'react-router-dom'
+import './App.css'
 import {registerInterceptors} from './core/http.client.ts'
 import {
     confirmResetRoute,
-    confirmSignupRoute,
-    loginRoute, profileRoute,
+    confirmSignupRoute, homeRoute,
+    loginRoute,
+    profileRoute,
     resetRoute,
     signUpRoute,
     welcomeRoute,
@@ -20,7 +21,8 @@ import {ConfirmSignUp} from './views/auth/ConfirmSignUp.tsx'
 import {Login} from './views/auth/Login.tsx'
 import {Reset} from './views/auth/Reset.tsx'
 import {SignUp} from './views/auth/SignUp.tsx'
-import {Status} from './views/common/Status.tsx'
+import {Home} from './views/Home.tsx'
+import {StepperTemp} from './views/profile/Stepper.tsx'
 import {ProtectedRoutes} from './views/ProtectedRoutes.tsx'
 import {PublicRoutes} from './views/PublicRoutes.tsx'
 import {Welcome} from './views/Welcome.tsx'
@@ -42,10 +44,12 @@ export const App = () => {
                 <Route path={confirmSignupRoute} element={<ConfirmSignUp/>}/>
                 <Route path={resetRoute} element={<Reset/>}/>
                 <Route path={confirmResetRoute} element={<ConfirmReset/>}/>
+                <Route path="*" element={<Navigate to={welcomeRoute} replace={true}/>}/>
             </Route>
             <Route element={<ProtectedRoutes/>}>
-                <Route path={profileRoute} element={<Status label="Działa!!"/>}/>
-                <Route path="*" element={<Navigate to={profileRoute} replace={true}/>}/>
+                <Route path={profileRoute} element={<StepperTemp/>}/>
+                <Route path={homeRoute} element={<Home/>}/>
+                <Route path="*" element={<Navigate to={homeRoute} replace={true}/>}/>
             </Route>
         </Routes>
     )
