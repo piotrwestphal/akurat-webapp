@@ -108,9 +108,10 @@ export const StepperTemp = (): JSX.Element => {
         httpGet<ProfileDto>('/api/v1/profiles/me')
             .then(({data}) => {
                 setFetchResult({loading: false, data})
-                if (data) {
-                    navigate(homeRoute)
-                }
+                // TODO: restore below condition
+                // if (data) {
+                //     navigate(homeRoute)
+                // }
             })
     }
 
