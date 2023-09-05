@@ -1,15 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useFormik } from 'formik'
+import {Stack, Typography} from '@mui/material'
+import {useFormik} from 'formik'
+import {FormikHelpers} from 'formik/dist/types'
+import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
-import { Schema } from 'yup'
-import { FormikHelpers } from 'formik/dist/types'
-import { Stack, Typography } from '@mui/material'
-import { httpPost, HttpResult } from '../../core/http.client'
-import { ErrorStatus } from '../common/Status'
-import { confirmResetRoute, loginRoute } from '../../core/routes'
-import { EmailField } from './EmailField'
-import { ContinueButton } from './ContinueButton'
+import {Schema} from 'yup'
+import {httpPost, HttpResult} from '../../core/http.client'
+import {confirmResetRoute, loginRoute} from '../../core/routes'
+import {MyLink} from '../common/MyLink.tsx'
+import {ErrorStatus} from '../common/Status'
+import {ContinueButton} from './ContinueButton'
+import {EmailField} from './EmailField'
 
 type ResetDto = Readonly<{
     email: string
@@ -65,7 +66,7 @@ export const Reset = () => {
                   height: '100vh',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
               }}>
             <Stack spacing={2}
                    alignItems="center">
@@ -75,9 +76,8 @@ export const Reset = () => {
                 <EmailField width={itemWidth} formik={formik}/>
                 <ContinueButton width={itemWidth} formik={formik}/>
                 <Typography variant="body2">
-                    <Link style={{textDecoration: 'none'}}
-                          to={loginRoute}
-                          state={{noRefresh: true}}>Back to login screen</Link>
+                    <MyLink to={loginRoute}
+                            state={{noRefresh: true}}>Back to login screen</MyLink>
                 </Typography>
                 {fetchResult?.errorDetails && <ErrorStatus label={fetchResult.errorDetails}/>}
             </Stack>

@@ -1,15 +1,16 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useFormik } from 'formik'
+import {Stack, TextField, Typography} from '@mui/material'
+import {useFormik} from 'formik'
+import {FormikHelpers} from 'formik/dist/types'
+import {useState} from 'react'
+import {useLocation, useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
-import { Schema } from 'yup'
-import { FormikHelpers } from 'formik/dist/types'
-import { Stack, TextField, Typography } from '@mui/material'
-import { httpPost, HttpResult } from '../../core/http.client'
-import { ErrorStatus } from '../common/Status'
-import { loginRoute, signUpRoute } from '../../core/routes'
-import { EmailField } from './EmailField'
-import { ContinueButton } from './ContinueButton'
+import {Schema} from 'yup'
+import {httpPost, HttpResult} from '../../core/http.client'
+import {loginRoute, signUpRoute} from '../../core/routes'
+import {MyLink} from '../common/MyLink.tsx'
+import {ErrorStatus} from '../common/Status'
+import {ContinueButton} from './ContinueButton'
+import {EmailField} from './EmailField'
 
 type ConfirmSignupDto = Readonly<{
     email: string
@@ -23,7 +24,7 @@ export type ConfirmSignupFormValues = Readonly<{
 
 const toReq = ({
                    email,
-                   code
+                   code,
                }: ConfirmSignupFormValues): ConfirmSignupDto => ({
     email,
     confirmationCode: code,
@@ -40,7 +41,7 @@ const validationSchema = yup.object<ConfirmSignupFormValues>({
         .string()
         .min(6)
         .max(6)
-        .required('Valid confirmation code is required')
+        .required('Valid confirmation code is required'),
 } satisfies Record<keyof ConfirmSignupFormValues, Schema>)
 
 const itemWidth = 300
@@ -61,13 +62,19 @@ export const ConfirmSignUp = () => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})
                 if (data) {
-                    navigate(loginRoute, {state: {noRefresh: true, email: values.email, confirmationMessage: data.message}})
+                    navigate(loginRoute, {
+                        state: {
+                            noRefresh: true,
+                            email: values.email,
+                            confirmationMessage: data.message,
+                        },
+                    })
                 }
             })
     }
 
     const formik = useFormik<ConfirmSignupFormValues>({
-        initialValues: {email, code: ''}, validationSchema, onSubmit
+        initialValues: {email, code: ''}, validationSchema, onSubmit,
     })
 
     return (
@@ -76,7 +83,7 @@ export const ConfirmSignUp = () => {
                   height: '100vh',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
               }}>
             <Stack spacing={2}
                    alignItems="center">
@@ -95,9 +102,8 @@ export const ConfirmSignUp = () => {
                            error={formik.touched.code && Boolean(formik.errors.code)}
                            helperText={(formik.touched.code && formik.errors.code) || ''}/>
                 <ContinueButton width={itemWidth} formik={formik}/>
-                <Typography variant="body2">Didn't receive the code? <Link style={{textDecoration: 'none'}}
-                                                                             to={signUpRoute}
-                                                                             state={{noRefresh: true}}>Please try to reset again</Link>
+                <Typography variant="body2">Didn't receive the code? <MyLink to={signUpRoute}
+                                                                             state={{noRefresh: true}}>Please try to reset again</MyLink>
                 </Typography>
                 {fetchResult?.errorDetails && <ErrorStatus label={fetchResult.errorDetails}/>}
             </Stack>

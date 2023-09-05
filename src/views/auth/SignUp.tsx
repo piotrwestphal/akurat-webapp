@@ -1,16 +1,17 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useFormik } from 'formik'
+import {Stack, Typography} from '@mui/material'
+import {useFormik} from 'formik'
+import {FormikHelpers} from 'formik/dist/types'
+import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
-import { Schema } from 'yup'
-import { FormikHelpers } from 'formik/dist/types'
-import { Stack, Typography } from '@mui/material'
-import { httpPost, HttpResult } from '../../core/http.client'
-import { ErrorStatus } from '../common/Status'
-import { confirmSignupRoute, loginRoute } from '../../core/routes'
-import { EmailField } from './EmailField'
-import { PasswordField } from './PasswordField'
-import { ContinueButton } from './ContinueButton'
+import {Schema} from 'yup'
+import {httpPost, HttpResult} from '../../core/http.client'
+import {confirmSignupRoute, loginRoute} from '../../core/routes'
+import {MyLink} from '../common/MyLink.tsx'
+import {ErrorStatus} from '../common/Status'
+import {ContinueButton} from './ContinueButton'
+import {EmailField} from './EmailField'
+import {PasswordField} from './PasswordField'
 
 type SignupDto = Readonly<{
     email: string
@@ -24,7 +25,7 @@ export type SignupFormValues = Readonly<{
 
 const toReq = ({
                    email,
-                   password
+                   password,
                }: SignupFormValues): SignupDto => ({
     email,
     password,
@@ -48,7 +49,7 @@ const validationSchema = yup.object<SignupFormValues>({
         .required('User email is required'),
     password: yup
         .string()
-        .required('Password is required')
+        .required('Password is required'),
 } satisfies Record<keyof SignupFormValues, Schema>)
 
 const itemWidth = 300
@@ -69,8 +70,8 @@ export const SignUp = () => {
                         state: {
                             noRefresh: true,
                             confirmationMessage: 'Account has been confirmed',
-                            email: values.email
-                        }
+                            email: values.email,
+                        },
                     })
                 }
                 if (data?.codeDeliveryDetails) {
@@ -87,7 +88,7 @@ export const SignUp = () => {
                   height: '100vh',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
               }}>
             <Stack spacing={2}
                    alignItems="center">
@@ -96,9 +97,8 @@ export const SignUp = () => {
                 <EmailField width={itemWidth} formik={formik}/>
                 <PasswordField width={itemWidth} formik={formik}/>
                 <ContinueButton width={itemWidth} formik={formik}/>
-                <Typography variant="body2">Already have an account? <Link style={{textDecoration: 'none'}}
-                                                                           to={loginRoute}
-                                                                           state={{noRefresh: true}}>Log in</Link>
+                <Typography variant="body2">Already have an account? <MyLink to={loginRoute}
+                                                                             state={{noRefresh: true}}>Log in</MyLink>
                 </Typography>
                 {fetchResult?.errorDetails && <ErrorStatus label={fetchResult.errorDetails}/>}
             </Stack>
