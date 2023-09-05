@@ -19,7 +19,7 @@ import {ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
 
 export type CreateProfileFormValues = Readonly<{
-    profileType: string
+    profileType: ProfileType
     displayName: string
     instagramProfile: string
 }>
@@ -47,14 +47,14 @@ const toReq = ({
                    displayName,
                    profileType,
                    instagramProfile,
-               }: CreateProfileFormValues): ProfileDto => ({
+               }: CreateProfileFormValues): Pick<ProfileDto, 'displayName' | 'profileType' | 'instagramProfile'> => ({
     displayName,
     profileType,
     instagramProfile,
 })
 
 // TODO: add validating on continue -> formik.validateField
-export const StepperTemp = (): JSX.Element => {
+export const CreateProfile = (): JSX.Element => {
     const navigate = useNavigate()
     const [fetchResult, setFetchResult] = useState<FetchResultState>({loading: true})
     const [error, setError] = useState('')
@@ -92,7 +92,7 @@ export const StepperTemp = (): JSX.Element => {
     })
 
     const Buttons = ({label = 'Continue', backButton = true}) =>
-        <Box mt={2}>
+        <Box mt={2} sx={{width: 270, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
             {backButton && <Button onClick={handleBack}
                                    sx={{mt: 1, mr: 1}}>Back</Button>}
             <Button variant="contained"
@@ -120,14 +120,19 @@ export const StepperTemp = (): JSX.Element => {
     }, [])
 
     return (
-        <>
+        <Box sx={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+        }}>
             {fetchResult.loading && <LoadingStatus/>}
             {!fetchResult.loading && <Stack component="form"
+                                            alignItems="center"
                                             onSubmit={formik.handleSubmit}
-                                            autoComplete="off"
-                                            sx={{width: 300}}>
+                                            autoComplete="off">
                 <Typography mb={2} variant="h6">Create profile</Typography>
-                <Stepper activeStep={activeStep} orientation="vertical">
+                <Stepper sx={{width: 300}} activeStep={activeStep} orientation="vertical">
                     <Step>
                         <StepLabel>Profile Type</StepLabel>
                         <StepContent>
@@ -195,6 +200,6 @@ export const StepperTemp = (): JSX.Element => {
                 )}
                 {error && <ErrorStatus label={error}/>}
             </Stack>}
-        </>
+        </Box>
     )
 }
