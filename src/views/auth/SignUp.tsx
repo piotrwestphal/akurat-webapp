@@ -5,7 +5,7 @@ import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
-import {httpPost, HttpResult} from '../../core/http.client'
+import {httpAuthPost, HttpResult} from '../../core/http.client'
 import {confirmSignupRoute, loginRoute} from '../../core/routes'
 import {MyLink} from '../common/MyLink.tsx'
 import {ErrorStatus} from '../common/Status'
@@ -61,7 +61,7 @@ export const SignUp = () => {
     const onSubmit = (values: SignupFormValues,
                       {setSubmitting}: FormikHelpers<SignupFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<SignUpRes>('/api/v1/auth/signup', toReq(values))
+        httpAuthPost<SignUpRes>('/api/v1/signup', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})
