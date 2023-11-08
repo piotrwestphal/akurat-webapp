@@ -9,7 +9,7 @@ export type HttpResult<T = undefined> = Readonly<{
     errorDetails?: string
 }>
 
-const authHost = `https://auth.${window.location.hostname}`
+const authHost = `https://auth.${import.meta.env.VITE_HOSTNAME || window.location.hostname}`
 
 export const httpGet = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(url))
 export const httpAuthGet = async <T>(url: string): Promise<HttpResult<T>> => httpGet(`${authHost}${url}`)
