@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
-import * as cdk from 'aws-cdk-lib';
-import { BaseStack } from '../lib/base-stack';
+import * as cdk from 'aws-cdk-lib'
 import {RetentionDays} from 'aws-cdk-lib/aws-logs'
+import 'source-map-support/register'
+import {BaseStack} from '../lib/base-stack'
 
-const app = new cdk.App();
+const app = new cdk.App()
 
 new BaseStack(app, 'dev-AkuratWebappStack', {
     description: 'The stack with components needed for deploying Akurat Webapp',

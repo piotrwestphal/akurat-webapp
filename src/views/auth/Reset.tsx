@@ -5,7 +5,7 @@ import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
-import {httpPost, HttpResult} from '../../core/http.client'
+import {httpAuthPost, HttpResult} from '../../core/http.client'
 import {confirmResetRoute, loginRoute} from '../../core/routes'
 import {MyLink} from '../common/MyLink.tsx'
 import {ErrorStatus} from '../common/Status'
@@ -47,7 +47,7 @@ export const Reset = () => {
     const onSubmit = (values: ResetFormValues,
                       {setSubmitting}: FormikHelpers<ResetFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<ForgotRes>('/api/v1/auth/forgot', toReq(values))
+        httpAuthPost<ForgotRes>('/api/v1/forgot', toReq(values))
             .then(({errorDetails, data}) => {
                 console.log({errorDetails, data})
                 setSubmitting(false)

@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
-import {httpPost, HttpResult} from '../../core/http.client'
+import {httpAuthPost, HttpResult} from '../../core/http.client'
 import {loginRoute, resetRoute} from '../../core/routes'
 import {MyLink} from '../common/MyLink.tsx'
 import {ErrorStatus} from '../common/Status'
@@ -66,7 +66,7 @@ export const ConfirmReset = () => {
     const onSubmit = (values: ConfirmResetFormValues,
                       {setSubmitting}: FormikHelpers<ConfirmResetFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<ConfirmResetRes>('/api/v1/auth/confirm-forgot', toReq(values))
+        httpAuthPost<ConfirmResetRes>('/api/v1/confirm-forgot', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})

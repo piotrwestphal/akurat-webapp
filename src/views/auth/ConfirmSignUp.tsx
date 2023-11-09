@@ -5,7 +5,7 @@ import {useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
-import {httpPost, HttpResult} from '../../core/http.client'
+import {httpAuthPost, HttpResult} from '../../core/http.client'
 import {loginRoute, signUpRoute} from '../../core/routes'
 import {MyLink} from '../common/MyLink.tsx'
 import {ErrorStatus} from '../common/Status'
@@ -57,7 +57,7 @@ export const ConfirmSignUp = () => {
     const onSubmit = (values: ConfirmSignupFormValues,
                       {setSubmitting}: FormikHelpers<ConfirmSignupFormValues>) => {
         setFetchResult({errorDetails: ''})
-        httpPost<{ message: string }>('/api/v1/auth/confirm-signup', toReq(values))
+        httpAuthPost<{ message: string }>('/api/v1/confirm-signup', toReq(values))
             .then(({errorDetails, data}) => {
                 setSubmitting(false)
                 setFetchResult({errorDetails})
@@ -103,7 +103,8 @@ export const ConfirmSignUp = () => {
                            helperText={(formik.touched.code && formik.errors.code) || ''}/>
                 <ContinueButton width={itemWidth} formik={formik}/>
                 <Typography variant="body2">Didn't receive the code? <MyLink to={signUpRoute}
-                                                                             state={{noRefresh: true}}>Please try to reset again</MyLink>
+                                                                             state={{noRefresh: true}}>Please try to
+                    reset again</MyLink>
                 </Typography>
                 {fetchResult?.errorDetails && <ErrorStatus label={fetchResult.errorDetails}/>}
             </Stack>
