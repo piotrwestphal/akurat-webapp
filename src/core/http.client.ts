@@ -11,11 +11,11 @@ export type HttpResult<T = undefined> = Readonly<{
 
 const authHost = `https://auth.${import.meta.env.VITE_HOSTNAME || window.location.hostname}`
 
-export const httpGet = async <T>(url: string, withCredentials = false): Promise<HttpResult<T>> => call(axios.get<T>(url, {withCredentials}))
+export const httpGet = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(url))
 export const httpAuthGetWithCreds = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(`${authHost}${url}`, {withCredentials: true}))
 export const httpPatch = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.patch<T>(url, body))
-export const httpPost = async <T>(url: string, body: any, withCredentials = false): Promise<HttpResult<T>> => call(axios.post<T>(url, body, {withCredentials}))
-export const httpAuthPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => httpPost(`${authHost}${url}`, body)
+export const httpPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(url, body))
+export const httpAuthPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(`${authHost}${url}`, body))
 export const httpAuthPostWithCreds = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(`${authHost}${url}`, body, {withCredentials: true}))
 export const httpDelete = async <T>(url: string): Promise<HttpResult<T>> => call(axios.delete<T>(url))
 
