@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosResponse, HttpStatusCode } from 'axios'
-import { AuthContextParams } from '../ctx/AuthProvider'
-import { ErrorResponse } from './types'
+import axios, {AxiosError, AxiosResponse, HttpStatusCode} from 'axios'
+import {AuthContextParams} from '../ctx/AuthProvider'
+import {ErrorResponse} from './types'
 
 export type HttpResult<T = undefined> = Readonly<{
     data?: T
@@ -11,27 +11,28 @@ export type HttpResult<T = undefined> = Readonly<{
 
 const authHost = `https://auth.${import.meta.env.VITE_HOSTNAME || window.location.hostname}`
 
-export const httpGet = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(url))
-export const httpAuthGet = async <T>(url: string): Promise<HttpResult<T>> => httpGet(`${authHost}${url}`)
+export const httpGet = async <T>(url: string, withCredentials = false): Promise<HttpResult<T>> => call(axios.get<T>(url, {withCredentials}))
+export const httpAuthGetWithCreds = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(`${authHost}${url}`, {withCredentials: true}))
 export const httpPatch = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.patch<T>(url, body))
-export const httpPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(url, body))
+export const httpPost = async <T>(url: string, body: any, withCredentials = false): Promise<HttpResult<T>> => call(axios.post<T>(url, body, {withCredentials}))
 export const httpAuthPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => httpPost(`${authHost}${url}`, body)
+export const httpAuthPostWithCreds = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(`${authHost}${url}`, body, {withCredentials: true}))
 export const httpDelete = async <T>(url: string): Promise<HttpResult<T>> => call(axios.delete<T>(url))
 
 const call = async <T>(req: Promise<AxiosResponse<T>>): Promise<HttpResult<T>> => {
     try {
         const result = await req
         return {
-            data: result.data
+            data: result.data,
         }
     } catch (err) {
         const {response} = err as AxiosError<ErrorResponse>
         console.error(`Error during fetching data [${response?.status} ${response?.statusText}]`)
-        const {status, statusText, data} = response!
+        const {status, statusText, data} = response || {}
         return {
             errorStatus: status,
             errorMessage: `${status} ${statusText}`,
-            errorDetails: data.message ? data.message : undefined,
+            errorDetails: data?.message ? data.message : undefined,
         }
     }
 }

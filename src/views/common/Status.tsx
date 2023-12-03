@@ -1,7 +1,7 @@
-import Box from '@mui/material/Box'
-import { SxProps } from '@mui/system'
-import { Theme } from '@mui/material/styles'
 import {Stack, Typography} from '@mui/material'
+import Box from '@mui/material/Box'
+import {Theme} from '@mui/material/styles'
+import {SxProps} from '@mui/system'
 
 const statusStyle = {
     m: 2,
@@ -21,7 +21,12 @@ export const LoadingStatus = () => <Stack sx={{
 }} alignItems="center"><Box className="dots-3"></Box></Stack>
 
 export const ErrorStatus = ({label}: StatusProps) =>
-    <Typography fontSize={14} color="error" sx={statusStyle}>{label}</Typography>
+    <Typography color="error"
+                align="center"
+                fontSize={14}
+                sx={statusStyle}>{label}</Typography>
 
 export const SuccessStatus = ({label}: StatusProps) =>
-    <Typography fontSize={14} color="green" sx={statusStyle}>{label}</Typography>
+    <Typography color="green"
+                fontSize={14}
+                sx={statusStyle}>{label}</Typography>
