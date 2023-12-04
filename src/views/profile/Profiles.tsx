@@ -33,9 +33,10 @@ export const Profiles = () => {
         <Box>
             {fetchResult.loading && <LoadingStatus/>}
             {fetchResult.data &&
-                <Grid container>
+                <Grid pb={3} container>
                     {profiles.map(dto =>
-                        <Grid key={dto.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+                        <Grid item key={dto.id}
+                              xs={12} sm={6} md={4} lg={3} xl={2}>
                             <ProfileCard dto={dto}/>
                         </Grid>)}
                 </Grid>
