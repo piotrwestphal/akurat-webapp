@@ -8,7 +8,7 @@ import Stepper from '@mui/material/Stepper'
 import Typography from '@mui/material/Typography'
 import {useFormik} from 'formik'
 import {FormikHelpers} from 'formik/dist/types'
-import {JSX, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
@@ -17,7 +17,7 @@ import {httpGet, httpPost, HttpResult} from '../../core/http.client.ts'
 import {homeRoute} from '../../core/routes.ts'
 import {ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
-import {UploadImage} from './UploadImage.tsx'
+import {ProfileImageStep} from './ProfileImageStep.tsx'
 
 export type CreateProfileFormValues = Readonly<{
     profileType: ProfileType
@@ -188,10 +188,10 @@ export const CreateProfile = (): JSX.Element => {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>Upload profile
+                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>Select profile
                             photo</StepLabel>
                         <StepContent>
-                            <UploadImage/>
+                            <ProfileImageStep/>
                             <Buttons label="Finish"/>
                         </StepContent>
                     </Step>
