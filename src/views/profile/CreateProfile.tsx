@@ -17,6 +17,7 @@ import {httpGet, httpPost, HttpResult} from '../../core/http.client.ts'
 import {homeRoute} from '../../core/routes.ts'
 import {ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
+import {UploadImage} from './UploadImage.tsx'
 
 export type CreateProfileFormValues = Readonly<{
     profileType: ProfileType
@@ -73,6 +74,7 @@ export const CreateProfile = (): JSX.Element => {
             navigate(homeRoute)
         }
     }
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)
     }
@@ -182,11 +184,19 @@ export const CreateProfile = (): JSX.Element => {
                                        value={formik.values.instagramProfile}
                                        onChange={formik.handleChange}
                                        helperText="Not need to be an instagram url"/>
-                            {<Buttons label="Finish"/>}
+                            <Buttons/>
+                        </StepContent>
+                    </Step>
+                    <Step>
+                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>Upload profile
+                            photo</StepLabel>
+                        <StepContent>
+                            <UploadImage/>
+                            <Buttons label="Finish"/>
                         </StepContent>
                     </Step>
                 </Stepper>
-                {activeStep === 3 && (
+                {activeStep === 4 && (
                     <Box sx={{p: 3}}>
                         <Typography mb={2}>All steps completed</Typography>
                         <Button onClick={handleReset}
