@@ -23,7 +23,7 @@ export const Profiles = () => {
 
     const refresh = () => {
         setFetchResult({loading: true})
-        httpGet<ProfilesDto>(`/api/v1/profiles`)
+        httpGet<ProfilesDto>(`/api/v1/profiles?limit=250`)
             .then(({data, errorMessage}) => {
                 setFetchResult({loading: false, data, errorMessage})
             })

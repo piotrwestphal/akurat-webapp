@@ -4,12 +4,19 @@ export type AuthRes = Readonly<{ token: string, expiresIn: number, accessToken: 
 
 export type ErrorResponse = Readonly<{ message: string }>
 
+export type ImageRefDto = Readonly<{
+    key: string
+    origKey: string
+    thumbKey: string
+}>
+
 export type ProfileDto = Readonly<{
     id: string
     email: string
     profileType: ProfileType
     displayName: string
     instagramProfile: string
+    profileImage: ImageRefDto
     createdAt: number
     updatedAt: number
 }>
