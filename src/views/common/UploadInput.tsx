@@ -8,18 +8,18 @@ export type UploadedImage = Readonly<{
 }>
 
 type UploadImageProps = Readonly<{
-    setImage: Dispatch<SetStateAction<UploadedImage | undefined>>
+    setUploadedImage: Dispatch<SetStateAction<UploadedImage | undefined>>
 }>
 export const UploadInput = ({
-                                setImage,
+                                setUploadedImage,
                             }: UploadImageProps) => {
     const onUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         if (file) {
-            const uploaded = await uploadFile(file)
-            setImage(uploaded)
+            const image = await uploadFile(file)
+            setUploadedImage(image)
         } else {
-            setImage(undefined)
+            setUploadedImage(undefined)
         }
     }
 

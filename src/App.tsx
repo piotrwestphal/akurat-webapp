@@ -28,6 +28,7 @@ import {PublicRoutes} from './views/PublicRoutes.tsx'
 import {Welcome} from './views/Welcome.tsx'
 
 // TODO: generate PWA assets https://www.npmjs.com/package/pwa-asset-generator
+// TODO: deal with proper content-type in the webapp returned from cdn
 export const App = () => {
     const auth = useAuth()
 

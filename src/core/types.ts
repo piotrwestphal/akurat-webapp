@@ -16,7 +16,7 @@ export type ProfileDto = Readonly<{
     profileType: ProfileType
     displayName: string
     instagramProfile: string
-    profilePhoto: ImageRefDto
+    profileImage: ImageRefDto
     createdAt: number
     updatedAt: number
 }>

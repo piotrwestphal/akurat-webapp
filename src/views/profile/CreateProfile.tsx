@@ -15,7 +15,7 @@ import {Schema} from 'yup'
 import {ProfileType} from '../../core/consts.ts'
 import {httpGet, httpPost, HttpResult} from '../../core/http.client.ts'
 import {homeRoute} from '../../core/routes.ts'
-import {ProfileDto} from '../../core/types.ts'
+import {ImageRefDto, ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
 import {BaseInfoStep} from './BaseInfoStep.tsx'
 import {ProfileTypeStep} from './ProfileTypeStep.tsx'
@@ -25,12 +25,14 @@ export type CreateProfileFormValues = Readonly<{
     profileType: ProfileType
     displayName: string
     instagramProfile: string
+    profileImage?: ImageRefDto
 }>
 
 const initialValues = {
     profileType: ProfileType.MODEL,
     displayName: '',
     instagramProfile: '',
+    profileImage: undefined,
 } satisfies CreateProfileFormValues
 
 const validationSchema = yup.object<CreateProfileFormValues>({
@@ -42,19 +44,29 @@ const validationSchema = yup.object<CreateProfileFormValues>({
         .string()
         .min(3, '"Display name" must be at least 3 characters')
         .required('"Display name" is required'),
-    instagramProfile: yup.string().required(),
+    instagramProfile: yup.string(),
+    profileImage: yup.object<ImageRefDto>({
+        key: yup.string(),
+        origKey: yup.string(),
+        thumbKey: yup.string(),
+    } satisfies Record<keyof ImageRefDto, Schema>),
 } satisfies Record<keyof CreateProfileFormValues, Schema>)
 
 type FetchResultState = HttpResult<{}> & Readonly<{ loading: boolean }>
+
+type CreateProfileReq = Pick<ProfileDto, 'displayName' | 'profileType' | 'instagramProfile'>
+    & { profileImage?: ImageRefDto }
 
 const toReq = ({
                    displayName,
                    profileType,
                    instagramProfile,
-               }: CreateProfileFormValues): Pick<ProfileDto, 'displayName' | 'profileType' | 'instagramProfile'> => ({
+                   profileImage,
+               }: CreateProfileFormValues): CreateProfileReq => ({
     displayName,
     profileType,
     instagramProfile,
+    profileImage,
 })
 
 export const CreateProfile = () => {
@@ -138,8 +150,8 @@ export const CreateProfile = () => {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>Profile
-                            Details</StepLabel>
+                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>
+                            Profile Details</StepLabel>
                         <StepContent>
                             <TextField fullWidth
                                        id="intagramProfile"

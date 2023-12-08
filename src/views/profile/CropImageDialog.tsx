@@ -7,13 +7,13 @@ import ReactCrop, {centerCrop, Crop, makeAspectCrop, PixelCrop} from 'react-imag
 import {UploadedImage} from '../common/UploadInput.tsx'
 
 type CropImageDialogProps = Readonly<{
-    image: UploadedImage
+    uploadedImage: UploadedImage
     setPreview: Dispatch<SetStateAction<string>>
     setOpen: Dispatch<SetStateAction<boolean>>
     onCancel: () => void
 }>
 export const CropImageDialog = ({
-                                    image,
+                                    uploadedImage,
                                     setPreview,
                                     setOpen,
                                     onCancel,
@@ -47,7 +47,7 @@ export const CropImageDialog = ({
             completedCrop!.width,
             completedCrop!.height,
         )
-        const base64CroppedImage = canvas.toDataURL(image.file.type)
+        const base64CroppedImage = canvas.toDataURL(uploadedImage.file.type)
         setPreview(base64CroppedImage)
         setOpen(false)
     }
@@ -80,7 +80,8 @@ export const CropImageDialog = ({
                            onChange={c => setCrop(c)}
                            onComplete={setCompletedCrop}>
                     <img ref={imgRef}
-                         src={image.url} alt="Uploaded Image"
+                         alt="Uploaded Image"
+                         src={uploadedImage.url}
                          onLoad={onImageLoad}/>
                 </ReactCrop>
             </DialogContent>
