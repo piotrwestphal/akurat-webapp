@@ -21,7 +21,7 @@ export const Home = () => {
         <Box pb={7} ref={ref}>
             <CssBaseline />
             <Profiles/>
-            <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, mb: 3}} elevation={3}>
+            <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, pb: 3}} elevation={3}>
                 <BottomNavigation
                     showLabels
                     value={value}

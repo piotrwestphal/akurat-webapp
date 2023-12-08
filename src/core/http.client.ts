@@ -27,8 +27,8 @@ const call = async <T>(req: Promise<AxiosResponse<T>>): Promise<HttpResult<T>> =
         }
     } catch (err) {
         const {response} = err as AxiosError<ErrorResponse>
-        console.error(`Error during fetching data [${response?.status} ${response?.statusText}]`)
         const {status, statusText, data} = response || {}
+        console.error(`Error during fetching data [${status} ${statusText}]`)
         return {
             errorStatus: status,
             errorMessage: `${status} ${statusText}`,

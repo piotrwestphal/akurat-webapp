@@ -14,11 +14,13 @@
     "@emotion/styled": "11.11.0",
     "@fontsource/roboto": "5.0.8",
     "@mui/icons-material": "5.14.7",
+    "@mui/lab": "5.0.0-alpha.154",
     "@mui/material": "5.14.7",
     "axios": "1.5.0",
     "formik": "2.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-image-crop": "11.0.1",
     "react-router-dom": "6.15.0",
     "yup": "1.2.0"
   },
