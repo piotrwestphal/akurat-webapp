@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import {useFormik} from 'formik'
 import {FormikHelpers} from 'formik/dist/types'
 import {useEffect, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import * as yup from 'yup'
 import {Schema} from 'yup'
 import {ProfileType} from '../../core/consts.ts'
@@ -70,11 +70,11 @@ const toReq = ({
 })
 
 export const CreateProfile = () => {
+    const location = useLocation()
     const navigate = useNavigate()
     const [fetchResult, setFetchResult] = useState<FetchResultState>({loading: true})
     const [error, setError] = useState('')
     const [activeStep, setActiveStep] = useState(0)
-
     const onSubmit = async (values: CreateProfileFormValues,
                             {setSubmitting}: FormikHelpers<CreateProfileFormValues>) => {
         setError('')
@@ -105,9 +105,9 @@ export const CreateProfile = () => {
             .then(({data}) => {
                 setFetchResult({loading: false, data})
                 // TODO: restore below condition
-                // if (data) {
-                //     navigate(homeRoute)
-                // }
+                if (data && location.state?.from !== homeRoute) {
+                    navigate(homeRoute)
+                }
             })
     }
 

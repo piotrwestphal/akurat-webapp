@@ -5,7 +5,7 @@ import {BottomNavigation, BottomNavigationAction, CssBaseline, Paper} from '@mui
 import Box from '@mui/material/Box'
 import {useEffect, useRef, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {profileRoute} from '../core/routes.ts'
+import {homeRoute, profileRoute} from '../core/routes.ts'
 import {Profiles} from './profile/Profiles.tsx'
 
 export const Home = () => {
@@ -30,7 +30,7 @@ export const Home = () => {
                     }}>
                     <BottomNavigationAction disabled label="Recents" icon={<RestoreIcon/>}/>
                     <BottomNavigationAction disabled label="Favorites" icon={<FavoriteIcon/>}/>
-                    <BottomNavigationAction onClick={() => navigate(profileRoute)} label="Profile" icon={<AccountCircleIcon/>}/>
+                    <BottomNavigationAction onClick={() => navigate(profileRoute, {state: {from: homeRoute}})} label="Profile" icon={<AccountCircleIcon/>}/>
                 </BottomNavigation>
             </Paper>
         </Box>
