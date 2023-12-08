@@ -1,33 +1,32 @@
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import React, {Dispatch, SetStateAction, useRef, useState} from 'react'
 import ReactCrop, {centerCrop, Crop, makeAspectCrop, PixelCrop} from 'react-image-crop'
+import {UploadedImage} from '../common/UploadInput.tsx'
 
-type ImageDialogProps = Readonly<{
-    open: boolean
-    setImage: Dispatch<SetStateAction<string>>
+type CropImageDialogProps = Readonly<{
+    image: UploadedImage
+    setPreview: Dispatch<SetStateAction<string>>
     setOpen: Dispatch<SetStateAction<boolean>>
-    imageUrl: string
-    imageType: string
+    onCancel: () => void
 }>
-export const ImageDialog = ({
-                                imageUrl,
-                                imageType,
-                                open,
-                                setOpen,
-                                setImage,
-                            }: ImageDialogProps) => {
-    const [crop, setCrop] = useState<Crop>()
+export const CropImageDialog = ({
+                                    image,
+                                    setPreview,
+                                    setOpen,
+                                    onCancel,
+                                }: CropImageDialogProps) => {
     const imgRef = useRef<HTMLImageElement>(null)
+    const [crop, setCrop] = useState<Crop>()
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+
     const onSave = async () => {
         const canvas = document.createElement('canvas')
-        const image = imgRef.current!
-        const scaleX = image.naturalWidth / image.width
-        const scaleY = image.naturalHeight / image.height
+        const croppedImage = imgRef.current!
+        const scaleX = croppedImage.naturalWidth / croppedImage.width
+        const scaleY = croppedImage.naturalHeight / croppedImage.height
         canvas.width = completedCrop?.width!
         canvas.height = completedCrop?.height!
         const ctx = canvas.getContext('2d')!
@@ -38,7 +37,7 @@ export const ImageDialog = ({
         ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
         ctx.imageSmoothingQuality = 'high'
         ctx.drawImage(
-            image,
+            croppedImage,
             completedCrop!.x * scaleX,
             completedCrop!.y * scaleY,
             completedCrop!.width * scaleX,
@@ -48,12 +47,8 @@ export const ImageDialog = ({
             completedCrop!.width,
             completedCrop!.height,
         )
-        const base64Image = canvas.toDataURL(imageType)
-        setImage(base64Image)
-        setOpen(false)
-    }
-
-    const onCancel = () => {
+        const base64CroppedImage = canvas.toDataURL(image.file.type)
+        setPreview(base64CroppedImage)
         setOpen(false)
     }
 
@@ -73,11 +68,9 @@ export const ImageDialog = ({
             height,
         ))
     }
-    // const [fetchResult, setFetchResult] = useState<FetchResultState>({loading: true})
-    // const [error, setError] = useState('')
 
     return (
-        <Dialog open={open} onClose={onCancel}>
+        <>
             <DialogTitle>Select profile photo</DialogTitle>
             <DialogContent>
                 <ReactCrop aspect={1}
@@ -87,7 +80,7 @@ export const ImageDialog = ({
                            onChange={c => setCrop(c)}
                            onComplete={setCompletedCrop}>
                     <img ref={imgRef}
-                         src={imageUrl} alt="Uploaded Image"
+                         src={image.url} alt="Uploaded Image"
                          onLoad={onImageLoad}/>
                 </ReactCrop>
             </DialogContent>
@@ -96,6 +89,7 @@ export const ImageDialog = ({
                 <Button variant="contained"
                         onClick={onSave}>Save</Button>
             </DialogActions>
-        </Dialog>
+        </>
+
     )
 }

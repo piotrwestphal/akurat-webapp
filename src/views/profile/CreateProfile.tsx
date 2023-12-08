@@ -1,4 +1,4 @@
-import {FormControl, FormControlLabel, Radio, RadioGroup, Stack, TextField} from '@mui/material'
+import {Stack, TextField} from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Step from '@mui/material/Step'
@@ -17,7 +17,9 @@ import {httpGet, httpPost, HttpResult} from '../../core/http.client.ts'
 import {homeRoute} from '../../core/routes.ts'
 import {ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
-import {ProfileImageStep} from './ProfileImageStep.tsx'
+import {BaseInfoStep} from './BaseInfoStep.tsx'
+import {ProfileTypeStep} from './ProfileTypeStep.tsx'
+import {StepButtons} from './StepButtons.tsx'
 
 export type CreateProfileFormValues = Readonly<{
     profileType: ProfileType
@@ -38,8 +40,9 @@ const validationSchema = yup.object<CreateProfileFormValues>({
         .required('"Profile type" is required'),
     displayName: yup
         .string()
+        .min(3, '"Display name" must be at least 3 characters')
         .required('"Display name" is required'),
-    instagramProfile: yup.string(),
+    instagramProfile: yup.string().required(),
 } satisfies Record<keyof CreateProfileFormValues, Schema>)
 
 type FetchResultState = HttpResult<{}> & Readonly<{ loading: boolean }>
@@ -54,8 +57,7 @@ const toReq = ({
     instagramProfile,
 })
 
-// TODO: add validating on continue -> formik.validateField
-export const CreateProfile = (): JSX.Element => {
+export const CreateProfile = () => {
     const navigate = useNavigate()
     const [fetchResult, setFetchResult] = useState<FetchResultState>({loading: true})
     const [error, setError] = useState('')
@@ -64,6 +66,7 @@ export const CreateProfile = (): JSX.Element => {
     const onSubmit = async (values: CreateProfileFormValues,
                             {setSubmitting}: FormikHelpers<CreateProfileFormValues>) => {
         setError('')
+        console.log({values})
         const result = await httpPost<ProfileDto>('/api/v1/profiles', toReq(values))
         setSubmitting(false)
         if (result.errorDetails) {
@@ -74,15 +77,6 @@ export const CreateProfile = (): JSX.Element => {
             navigate(homeRoute)
         }
     }
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1)
-    }
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1)
-    }
-
     const handleReset = () => {
         formik.resetForm()
         setError('')
@@ -92,18 +86,6 @@ export const CreateProfile = (): JSX.Element => {
     const formik = useFormik<CreateProfileFormValues>({
         initialValues, validationSchema, onSubmit,
     })
-
-    const Buttons = ({label = 'Continue', backButton = true}) =>
-        <Box mt={2} sx={{width: 270, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
-            {backButton && <Button onClick={handleBack}
-                                   sx={{mt: 1, mr: 1}}>Back</Button>}
-            <Button variant="contained"
-                    onClick={handleNext}
-                    sx={{
-                        mt: 1,
-                        mr: 1,
-                    }}>{label}</Button>
-        </Box>
 
     const getCurrentProfile = () => {
         setFetchResult({loading: true})
@@ -138,39 +120,21 @@ export const CreateProfile = (): JSX.Element => {
                     <Step>
                         <StepLabel>Profile Type</StepLabel>
                         <StepContent>
-                            <FormControl>
-                                <RadioGroup onChange={formik.handleChange}
-                                            value={formik.values.profileType}>
-                                    <FormControlLabel name="profileType"
-                                                      value={ProfileType.MODEL}
-                                                      control={<Radio/>}
-                                                      label="Model"/>
-                                    <FormControlLabel name="profileType"
-                                                      value={ProfileType.PHOTO}
-                                                      control={<Radio/>}
-                                                      label="Photographer"/>
-                                    <FormControlLabel name="profileType"
-                                                      value={ProfileType.BRAND}
-                                                      control={<Radio/>}
-                                                      label="Brand"/>
-                                </RadioGroup>
-                            </FormControl>
-                            {<Buttons backButton={false}/>}
+                            <ProfileTypeStep formik={formik}/>
+                            <StepButtons formik={formik}
+                                         setActiveStep={setActiveStep}
+                                         keys={['profileType']}
+                                         backButton={false}/>
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel>Base Info</StepLabel>
-                        <StepContent>
-                            <TextField fullWidth
-                                       id="displayName"
-                                       name="displayName"
-                                       label="Display Name"
-                                       value={formik.values.displayName}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.displayName && Boolean(formik.errors.displayName)}
-                                       helperText={(formik.touched.displayName && formik.errors.displayName) ||
-                                           'What name will be displayed to other Kolektiv users'}/>
-                            {<Buttons/>}
+                        <StepLabel error={!!formik.errors.displayName && formik.touched.displayName}>Base
+                            Info</StepLabel>
+                        <StepContent TransitionProps={{unmountOnExit: false}}>
+                            <BaseInfoStep formik={formik}/>
+                            <StepButtons formik={formik}
+                                         keys={['displayName']}
+                                         setActiveStep={setActiveStep}/>
                         </StepContent>
                     </Step>
                     <Step>
@@ -184,28 +148,23 @@ export const CreateProfile = (): JSX.Element => {
                                        value={formik.values.instagramProfile}
                                        onChange={formik.handleChange}
                                        helperText="Not need to be an instagram url"/>
-                            <Buttons/>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel optional={<Typography variant="caption">Optional</Typography>}>Select profile
-                            photo</StepLabel>
-                        <StepContent>
-                            <ProfileImageStep/>
-                            <Buttons label="Finish"/>
+                            <StepButtons formik={formik}
+                                         keys={['instagramProfile']}
+                                         setActiveStep={setActiveStep}
+                                         label="Finish"/>
                         </StepContent>
                     </Step>
                 </Stepper>
-                {activeStep === 4 && (
+                {activeStep === 3 && (
                     <Box sx={{p: 3}}>
-                        <Typography mb={2}>All steps completed</Typography>
                         <Button onClick={handleReset}
                                 sx={{mt: 1, mr: 1}}
                                 disabled={formik.isSubmitting}>Reset</Button>
                         <Button type="submit"
                                 sx={{mt: 1, mr: 1}}
                                 variant="contained"
-                                disabled={formik.isSubmitting}>Join the Kolektiv</Button>
+                                disabled={formik.isSubmitting || Object.keys(formik.errors).length > 0}>Join the
+                            Kolektiv</Button>
                     </Box>
                 )}
                 {error && <ErrorStatus label={error}/>}
