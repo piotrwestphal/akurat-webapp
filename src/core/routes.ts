@@ -6,4 +6,5 @@ export const resetRoute = '/reset'
 export const confirmResetRoute = '/confirm-reset'
 
 export const profileRoute = '/profile'
+export const profilesRoute = '/profiles'
 export const homeRoute = '/home'

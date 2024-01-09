@@ -15,7 +15,7 @@ import {Schema} from 'yup'
 import {ProfileType} from '../../core/consts.ts'
 import {httpGet, httpPost, HttpResult} from '../../core/http.client.ts'
 import {homeRoute} from '../../core/routes.ts'
-import {ImageRefDto, ProfileDto} from '../../core/types.ts'
+import {ImageVariants, ImgRef, ProfileDto} from '../../core/types.ts'
 import {ErrorStatus, LoadingStatus} from '../common/Status.tsx'
 import {BaseInfoStep} from './BaseInfoStep.tsx'
 import {ProfileTypeStep} from './ProfileTypeStep.tsx'
@@ -25,7 +25,7 @@ export type CreateProfileFormValues = Readonly<{
     profileType: ProfileType
     displayName: string
     instagramProfile: string
-    profileImage?: ImageRefDto
+    profileImage?: ImageVariants
 }>
 
 const initialValues = {
@@ -34,6 +34,16 @@ const initialValues = {
     instagramProfile: '',
     profileImage: undefined,
 } satisfies CreateProfileFormValues
+
+// TODO: dynamic validation see - https://github.com/tfmcsurfacedigital/ucos-adapter-webapp/blob/main/src/views/instances/CreateInstanceForm.tsx
+
+const imgRefSchema = yup.object<ImgRef>({
+    id: yup.string(),
+    key: yup.string(),
+    ext: yup.string(),
+    width: yup.number(),
+    height: yup.number(),
+} satisfies Record<keyof ImgRef, Schema>)
 
 const validationSchema = yup.object<CreateProfileFormValues>({
     profileType: yup
@@ -45,17 +55,17 @@ const validationSchema = yup.object<CreateProfileFormValues>({
         .min(3, '"Display name" must be at least 3 characters')
         .required('"Display name" is required'),
     instagramProfile: yup.string(),
-    profileImage: yup.object<ImageRefDto>({
-        key: yup.string(),
-        origKey: yup.string(),
-        thumbKey: yup.string(),
-    } satisfies Record<keyof ImageRefDto, Schema>),
+    profileImage: yup.object<ImageVariants>({
+        prvw: imgRefSchema,
+        orig: imgRefSchema,
+        thmb: imgRefSchema,
+    } satisfies Record<keyof ImageVariants, Schema>),
 } satisfies Record<keyof CreateProfileFormValues, Schema>)
 
 type FetchResultState = HttpResult<{}> & Readonly<{ loading: boolean }>
 
 type CreateProfileReq = Pick<ProfileDto, 'displayName' | 'profileType' | 'instagramProfile'>
-    & { profileImage?: ImageRefDto }
+    & { profileImage?: ImageVariants }
 
 const toReq = ({
                    displayName,

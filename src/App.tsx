@@ -2,15 +2,17 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
-import 'react-image-crop/dist/ReactCrop.css'
 import {useMemo} from 'react'
+import 'react-image-crop/dist/ReactCrop.css'
 import {Navigate, Route, Routes} from 'react-router-dom'
 import {registerInterceptors} from './core/http.client.ts'
 import {
     confirmResetRoute,
-    confirmSignupRoute, homeRoute,
+    confirmSignupRoute,
+    homeRoute,
     loginRoute,
     profileRoute,
+    profilesRoute,
     resetRoute,
     signUpRoute,
     welcomeRoute,
@@ -21,8 +23,10 @@ import {ConfirmSignUp} from './views/auth/ConfirmSignUp.tsx'
 import {Login} from './views/auth/Login.tsx'
 import {Reset} from './views/auth/Reset.tsx'
 import {SignUp} from './views/auth/SignUp.tsx'
+import {Base} from './views/Base.tsx'
 import {Home} from './views/Home.tsx'
 import {CreateProfile} from './views/profile/CreateProfile.tsx'
+import {Profiles} from './views/profile/Profiles.tsx'
 import {ProtectedRoutes} from './views/ProtectedRoutes.tsx'
 import {PublicRoutes} from './views/PublicRoutes.tsx'
 import {Welcome} from './views/Welcome.tsx'
@@ -48,8 +52,11 @@ export const App = () => {
                 <Route path="*" element={<Navigate to={welcomeRoute} replace={true}/>}/>
             </Route>
             <Route element={<ProtectedRoutes/>}>
+                <Route element={<Base/>}>
+                    <Route path={profilesRoute} element={<Profiles/>}/>
+                    <Route path={homeRoute} element={<Home/>}/>
+                </Route>
                 <Route path={profileRoute} element={<CreateProfile/>}/>
-                <Route path={homeRoute} element={<Home/>}/>
                 <Route path="*" element={<Navigate to={homeRoute} replace={true}/>}/>
             </Route>
         </Routes>

@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosResponse, HttpStatusCode} from 'axios'
+import axios, {AxiosError, AxiosResponse, CanceledError, GenericAbortSignal, HttpStatusCode} from 'axios'
 import {AuthContextParams} from '../ctx/AuthProvider'
 import {ErrorResponse} from './types'
 
@@ -9,9 +9,11 @@ export type HttpResult<T = undefined> = Readonly<{
     errorDetails?: string
 }>
 
+export const RequestCancelledErrorMessage = 'CanceledError'
+
 const authHost = `https://auth.${import.meta.env.VITE_HOSTNAME || window.location.hostname}`
 
-export const httpGet = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(url))
+export const httpGet = async <T>(url: string, signal?: GenericAbortSignal): Promise<HttpResult<T>> => call(axios.get<T>(url, {signal}))
 export const httpAuthGetWithCreds = async <T>(url: string): Promise<HttpResult<T>> => call(axios.get<T>(`${authHost}${url}`, {withCredentials: true}))
 export const httpPatch = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.patch<T>(url, body))
 export const httpPost = async <T>(url: string, body: any): Promise<HttpResult<T>> => call(axios.post<T>(url, body))
@@ -27,6 +29,12 @@ const call = async <T>(req: Promise<AxiosResponse<T>>): Promise<HttpResult<T>> =
         }
     } catch (err) {
         const {response} = err as AxiosError<ErrorResponse>
+        if (err instanceof CanceledError) {
+            console.warn(`Request Cancelled`)
+            return {
+                errorMessage: RequestCancelledErrorMessage
+            }
+        }
         const {status, statusText, data} = response || {}
         console.error(`Error during fetching data [${status} ${statusText}]`)
         return {

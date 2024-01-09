@@ -8,7 +8,7 @@ import {useFormik} from 'formik'
 import {useEffect, useState} from 'react'
 import {uploadFile} from '../../core/file-uploader.ts'
 import {httpPost, HttpResult} from '../../core/http.client.ts'
-import {ImageRefDto} from '../../core/types.ts'
+import {ImageVariants} from '../../core/types.ts'
 import {ImageButton} from '../common/ImageButton.tsx'
 import {ErrorStatus} from '../common/Status.tsx'
 import {UploadedImage, UploadInput} from '../common/UploadInput.tsx'
@@ -18,7 +18,7 @@ import {CropImageDialog} from './CropImageDialog.tsx'
 type BaseInfoStepProps = Readonly<{
     formik: ReturnType<typeof useFormik<CreateProfileFormValues>>
 }>
-type FetchResultState = HttpResult<ImageRefDto> & Readonly<{ loading: boolean }>
+type FetchResultState = HttpResult<ImageVariants> & Readonly<{ loading: boolean }>
 export const BaseInfoStep = ({
                                  formik,
                              }: BaseInfoStepProps) => {
@@ -31,7 +31,7 @@ export const BaseInfoStep = ({
         setFetchResult({loading: true})
         formik.setFieldValue('profileImage', null)
         const toUpload = preview.replace(/^.+?,/, '')
-        httpPost<ImageRefDto>('/api/v1/images', {image: toUpload})
+        httpPost<ImageVariants>('/api/v1/images', {image: toUpload})
             .then(({data, errorMessage}) => {
                 setFetchResult({loading: false, data, errorMessage})
                 if (data) {
@@ -74,8 +74,8 @@ export const BaseInfoStep = ({
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Box sx={{display: 'flex', mb: 2}}>
-                {!!formik.values.profileImage?.key
-                    ? <Avatar sx={{m: 2, width: 100, height: 100}} src={formik.values.profileImage.thumbKey}/>
+                {formik.values.profileImage
+                    ? <Avatar sx={{m: 2, width: 100, height: 100}} src={formik.values.profileImage.thmb.key}/>
                     : <Avatar sx={{m: 2, width: 100, height: 100, backgroundColor: '#CFD8DC'}}>
                         {fetchResult.loading ? <CircularProgress size={30} color="secondary"/> :
                             <FaceTwoToneIcon color="primary" sx={{width: 100}} fontSize="large"/>}
