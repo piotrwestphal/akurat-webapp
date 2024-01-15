@@ -25,7 +25,7 @@ export const ProfileCard = ({dto}: ProfileCardProps) => {
     return (
         <Card sx={{m: 1}}>
             <CardHeader sx={{pl: 2, pr: 2, pt: 1, pb: 0}}
-                        avatar={dto.profileImage.thumbKey ? <Avatar src={dto.profileImage.thumbKey}/>: 'N/A'}
+                        avatar={dto.profileImage?.thmb.key ? <Avatar src={dto.profileImage.thmb.key}/>: 'N/A'}
                         titleTypographyProps={{variant: 'h6', sx: {fontWeight: 600}}}
                         subheaderTypographyProps={{fontSize: 12, fontWeight: 200}}
                         title={displayName}
